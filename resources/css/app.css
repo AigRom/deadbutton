@@ -1,0 +1,344 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+
+/*
+|--------------------------------------------------------------------------
+| Deadbutton
+|--------------------------------------------------------------------------
+*/
+
+:root {
+    --db-bg: #f3f2ed;
+    --db-text: #111111;
+}
+
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--db-bg);
+    color: var(--db-text);
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Loader — hand press
+|--------------------------------------------------------------------------
+*/
+
+@keyframes db-hand-press {
+
+    0%,
+    18% {
+        transform: translateY(11px);
+    }
+
+    36% {
+        transform: translateY(0);
+    }
+
+    43%,
+    54% {
+        transform: translateY(-5px);
+    }
+
+    68%,
+    100% {
+        transform: translateY(11px);
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Loader — button press
+|--------------------------------------------------------------------------
+*/
+
+@keyframes db-button-move {
+
+    0%,
+    39% {
+        transform: translateY(0);
+    }
+
+    44%,
+    54% {
+        transform: translateY(4px);
+    }
+
+    66%,
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Loader — button depth
+|--------------------------------------------------------------------------
+*/
+
+@keyframes db-button-depth {
+
+    0%,
+    40% {
+        opacity: 1;
+    }
+
+    44%,
+    54% {
+        opacity: 0;
+    }
+
+    64%,
+    100% {
+        opacity: 1;
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Loader — click state
+|--------------------------------------------------------------------------
+*/
+
+.db-click #db-hand {
+    animation: db-hand-press 0.38s ease-in-out;
+}
+
+.db-click #db-button {
+    animation: db-button-move 0.38s ease-in-out;
+}
+
+.db-click #db-button-depth {
+    animation: db-button-depth 0.38s ease-in-out;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Loader — hand exit
+|--------------------------------------------------------------------------
+*/
+
+#db-hand {
+    transition:
+        opacity 180ms ease,
+        transform 220ms cubic-bezier(0.4, 0, 1, 1);
+}
+
+#db-hand.db-hand-exit {
+    opacity: 0;
+    transform: translateY(25px);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Loader — page reveal
+|--------------------------------------------------------------------------
+*/
+
+#db-loader {
+    background-color: var(--db-bg);
+
+    transition:
+        background-color 500ms ease;
+}
+
+#db-loader.db-loader-reveal {
+    background-color: transparent;
+    pointer-events: none;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Header logo
+|--------------------------------------------------------------------------
+*/
+
+#db-header-logo {
+    opacity: 0;
+
+    transition:
+        opacity 120ms ease;
+}
+
+#db-header-logo.db-header-logo-visible {
+    opacity: 1;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Hero — typewriter
+|--------------------------------------------------------------------------
+*/
+
+#hero-title {
+    white-space: pre-wrap;
+}
+
+#hero-typed-text {
+    white-space: pre-wrap;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Hero — typewriter cursor
+|--------------------------------------------------------------------------
+*/
+
+.hero-cursor {
+    display: inline-block;
+
+    width: 0.055em;
+    height: 0.78em;
+
+    margin-left: 0.06em;
+
+    background: currentColor;
+
+    vertical-align: -0.03em;
+
+    animation:
+        db-cursor-blink 0.8s steps(1) infinite;
+}
+
+
+@keyframes db-cursor-blink {
+
+    0%,
+    45% {
+        opacity: 1;
+    }
+
+    46%,
+    100% {
+        opacity: 0;
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Hero — typing complete
+|--------------------------------------------------------------------------
+*/
+
+.hero-typing-complete .hero-cursor {
+    opacity: 0;
+    animation: none;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Contact overlay
+|--------------------------------------------------------------------------
+|
+| Closed state:
+| The entire contact view sits underneath the viewport.
+|
+*/
+
+#db-contact {
+    transform: translateY(100%);
+    visibility: hidden;
+
+    transition:
+        transform 750ms cubic-bezier(0.16, 1, 0.3, 1),
+        visibility 0s linear 750ms;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Contact overlay — open
+|--------------------------------------------------------------------------
+*/
+
+#db-contact.db-contact-visible {
+    transform: translateY(0);
+    visibility: visible;
+
+    transition:
+        transform 750ms cubic-bezier(0.16, 1, 0.3, 1),
+        visibility 0s;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Contact — body lock
+|--------------------------------------------------------------------------
+*/
+
+body.db-contact-open {
+    overflow: hidden;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Reduced motion
+|--------------------------------------------------------------------------
+*/
+
+@media (prefers-reduced-motion: reduce) {
+
+    /*
+    | Disable loader click animations.
+    */
+
+    #db-hand,
+    #db-button,
+    #db-button-depth {
+        animation: none !important;
+    }
+
+
+    /*
+    | Disable loader transitions.
+    */
+
+    #db-hand,
+    #db-loader,
+    #db-header-logo {
+        transition: none !important;
+    }
+
+
+    /*
+    | Disable cursor animation.
+    */
+
+    .hero-cursor {
+        animation: none !important;
+        opacity: 0;
+    }
+
+
+    /*
+    | Disable contact transition.
+    */
+
+    #db-contact {
+        transition: none !important;
+    }
+}
