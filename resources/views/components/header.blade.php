@@ -7,11 +7,12 @@
         class="
             relative
             block
-            w-[110px]
+            w-[95px]
             text-[#111]
             opacity-0
             transition-opacity
             duration-150
+            md:w-[110px]
         "
         aria-label="Deadbutton"
     >

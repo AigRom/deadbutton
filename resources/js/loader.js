@@ -12,6 +12,41 @@ if (loader && button && hand && headerLogo) {
 
     /*
     |--------------------------------------------------------------------------
+    | Sound
+    |--------------------------------------------------------------------------
+    */
+
+    const deadbuttonSound =
+        new Audio('/audio/deadbutton.wav');
+
+    deadbuttonSound.preload = 'auto';
+    deadbuttonSound.volume = 0.4;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Play sound
+    |--------------------------------------------------------------------------
+    */
+
+    const playDeadbuttonSound = () => {
+        const sound =
+            deadbuttonSound.cloneNode();
+
+        sound.volume =
+            deadbuttonSound.volume;
+
+        sound.play().catch(() => {
+            /*
+             * Browser may block audio before
+             * the first user interaction.
+             */
+        });
+    };
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Page ready
     |--------------------------------------------------------------------------
     */
@@ -44,7 +79,20 @@ if (loader && button && hand && headerLogo) {
 
         loader.classList.add('db-click');
 
-        await sleep(380);
+
+        /*
+         * The hand reaches the button at roughly
+         * 42% of the 380ms animation.
+         */
+        await sleep(160);
+
+        playDeadbuttonSound();
+
+
+        /*
+         * Finish the remaining click animation.
+         */
+        await sleep(220);
 
         loader.classList.remove('db-click');
     };
@@ -143,10 +191,6 @@ if (loader && button && hand && headerLogo) {
 
         /*
          * Start the flight on the next rendered frame.
-         *
-         * Two requestAnimationFrame calls make sure
-         * the browser has applied the initial state
-         * before starting the transition.
          */
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {

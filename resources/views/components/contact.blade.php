@@ -75,7 +75,7 @@
             <p
                 class="
                     mb-6
-                    text-[11px]
+                    text-[20px]
                     uppercase
                     tracking-[0.14em]
                     text-white/45
@@ -126,10 +126,14 @@
 
                 <span
                     class="
-                        transition-transform
+                        text-[0.8em]
+                        font-normal
+                        text-white/70
+                        transition-all
                         duration-300
                         group-hover:-translate-y-1
                         group-hover:translate-x-1
+                        group-hover:text-white
                     "
                     aria-hidden="true"
                 >

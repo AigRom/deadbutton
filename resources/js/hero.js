@@ -9,6 +9,49 @@ if (heroTitle) {
 
     const finalText = 'WE MAKE\nDIGITAL THINGS.';
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sounds
+    |--------------------------------------------------------------------------
+    */
+
+    const keySound = new Audio('/audio/key.wav');
+    const spaceSound = new Audio('/audio/space.wav');
+    const backspaceSound = new Audio('/audio/backspace.wav');
+
+    keySound.preload = 'auto';
+    spaceSound.preload = 'auto';
+    backspaceSound.preload = 'auto';
+
+    keySound.volume = 0.25;
+    spaceSound.volume = 0.3;
+    backspaceSound.volume = 0.3;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Play sound
+    |--------------------------------------------------------------------------
+    |
+    | Clone the audio so fast consecutive keystrokes can overlap naturally.
+    |
+    */
+
+    const playSound = (audio) => {
+        const sound = audio.cloneNode();
+
+        sound.volume = audio.volume;
+
+        sound.play().catch(() => {
+            /*
+             * Browsers may block audio before
+             * the first user interaction.
+             */
+        });
+    };
+
+
     /*
     |--------------------------------------------------------------------------
     | Build typewriter
@@ -33,6 +76,17 @@ if (heroTitle) {
 
     const typeCharacter = async (character) => {
         typedText.textContent += character;
+
+
+        /*
+         * Play matching keyboard sound.
+         */
+        if (character === ' ') {
+            playSound(spaceSound);
+        } else if (character !== '\n') {
+            playSound(keySound);
+        }
+
 
         /*
          * Natural typing speed.
@@ -70,6 +124,8 @@ if (heroTitle) {
     const backspace = async () => {
         typedText.textContent =
             typedText.textContent.slice(0, -1);
+
+        playSound(backspaceSound);
 
         await sleep(80);
     };
