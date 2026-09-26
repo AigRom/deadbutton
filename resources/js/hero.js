@@ -7,6 +7,9 @@ if (heroTitle) {
     const reducedMotion =
         window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    const loaderSeen =
+        sessionStorage.getItem('deadbutton-loader-seen') === 'true';
+
     const finalText = 'WE MAKE\nDIGITAL THINGS.';
 
 
@@ -33,9 +36,6 @@ if (heroTitle) {
     |--------------------------------------------------------------------------
     | Play sound
     |--------------------------------------------------------------------------
-    |
-    | Clone the audio so fast consecutive keystrokes can overlap naturally.
-    |
     */
 
     const playSound = (audio) => {
@@ -45,7 +45,7 @@ if (heroTitle) {
 
         sound.play().catch(() => {
             /*
-             * Browsers may block audio before
+             * Browser may block audio before
              * the first user interaction.
              */
         });
@@ -70,6 +70,27 @@ if (heroTitle) {
 
     /*
     |--------------------------------------------------------------------------
+    | Already seen
+    |--------------------------------------------------------------------------
+    |
+    | If the intro has already played during this browser session,
+    | show the finished hero immediately.
+    |
+    */
+
+    if (loaderSeen || reducedMotion) {
+        started = true;
+
+        typedText.textContent = finalText;
+
+        heroTitle.classList.add(
+            'hero-typing-complete'
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Type one character
     |--------------------------------------------------------------------------
     */
@@ -77,20 +98,12 @@ if (heroTitle) {
     const typeCharacter = async (character) => {
         typedText.textContent += character;
 
-
-        /*
-         * Play matching keyboard sound.
-         */
         if (character === ' ') {
             playSound(spaceSound);
         } else if (character !== '\n') {
             playSound(keySound);
         }
 
-
-        /*
-         * Natural typing speed.
-         */
         const delay =
             65 + Math.random() * 45;
 
@@ -138,82 +151,35 @@ if (heroTitle) {
     */
 
     const runTypewriter = async () => {
-        /*
-         * Prevent accidental double start.
-         */
         if (started) {
             return;
         }
 
         started = true;
 
-
-        /*
-         * Accessibility / reduced motion.
-         */
-        if (reducedMotion) {
-            typedText.textContent = finalText;
-            heroTitle.classList.add('hero-typing-complete');
-            return;
-        }
-
-
-        /*
-         * Let the button begin flying first.
-         */
         await sleep(220);
 
-
-        /*
-         * First line.
-         */
         await typeText('WE MAKE');
 
         await sleep(120);
 
-
-        /*
-         * New line.
-         */
         await typeCharacter('\n');
 
-
-        /*
-         * Start second line.
-         */
         await typeText('DIGIT');
 
-
-        /*
-         * Intentional typo.
-         */
         await typeCharacter('Q');
 
-
-        /*
-         * Small "oops" pause.
-         */
         await sleep(300);
 
-
-        /*
-         * Backspace the wrong character.
-         */
         await backspace();
 
-
-        /*
-         * Continue correctly.
-         */
         await typeText('AL THINGS.');
 
-
-        /*
-         * Leave cursor blinking briefly.
-         */
         await sleep(1000);
 
-        heroTitle.classList.add('hero-typing-complete');
+        heroTitle.classList.add(
+            'hero-typing-complete'
+        );
     };
 
 
@@ -234,12 +200,8 @@ if (heroTitle) {
     |--------------------------------------------------------------------------
     | Direct trigger fallback
     |--------------------------------------------------------------------------
-    |
-    | Also allows loader.js to call:
-    |
-    | window.revealDeadbuttonHero()
-    |
     */
 
-    window.revealDeadbuttonHero = runTypewriter;
+    window.revealDeadbuttonHero =
+        runTypewriter;
 }

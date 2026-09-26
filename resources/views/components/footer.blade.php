@@ -43,16 +43,13 @@
         </div>
 
 
-        
-
-
         {{-- Bottom --}}
         <div
             class="
-                flex
+                grid
+                grid-cols-3
                 items-end
-                justify-between
-                gap-8
+                gap-4
                 text-[10px]
                 uppercase
                 tracking-[0.14em]
@@ -63,7 +60,22 @@
                 Estonia / Finland
             </span>
 
-            <span>
+            <button
+                id="db-privacy-open"
+                type="button"
+                class="
+                    cursor-pointer
+                    justify-self-center
+                    uppercase
+                    transition-colors
+                    duration-200
+                    hover:text-black
+                "
+            >
+                Privacy
+            </button>
+
+            <span class="justify-self-end">
                 © {{ date('Y') }} DBTN
             </span>
         </div>

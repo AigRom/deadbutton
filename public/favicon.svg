@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <!-- Key depth -->
+    <rect x="5" y="7" width="54" height="54" rx="13" fill="#111111"></rect>
+
+    <!-- Key face -->
+    <rect x="5" y="3" width="54" height="54" rx="13" fill="#f3f2ed" stroke="#111111" stroke-width="3"></rect>
+
+    <!-- DB -->
+    <text x="32" y="31" text-anchor="middle" dominant-baseline="middle" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="-1">DB</text>
+</svg>

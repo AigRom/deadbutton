@@ -3,11 +3,47 @@ const button = document.getElementById('db-button');
 const hand = document.getElementById('db-hand');
 const headerLogo = document.getElementById('db-header-logo');
 
-if (loader && button && hand && headerLogo) {
+const loaderSeen =
+    sessionStorage.getItem('deadbutton-loader-seen') === 'true';
+
+const reducedMotion =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+
+/*
+|--------------------------------------------------------------------------
+| Skip loader
+|--------------------------------------------------------------------------
+|
+| The intro only plays once per browser tab/session.
+|
+*/
+
+if (loaderSeen || reducedMotion) {
+    if (loader) {
+        loader.remove();
+    }
+
+    if (headerLogo) {
+        headerLogo.classList.add(
+            'db-header-logo-visible'
+        );
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Run loader
+|--------------------------------------------------------------------------
+*/
+
+else if (loader && button && hand && headerLogo) {
     const sleep = (ms) =>
         new Promise(resolve => setTimeout(resolve, ms));
 
-    let pageReady = document.readyState === 'complete';
+    let pageReady =
+        document.readyState === 'complete';
 
 
     /*
@@ -71,27 +107,18 @@ if (loader && button && hand && headerLogo) {
     const clickButton = async () => {
         loader.classList.remove('db-click');
 
-        /*
-         * Force reflow so the click animation can
-         * restart every time.
-         */
         void loader.offsetWidth;
 
         loader.classList.add('db-click');
 
-
         /*
-         * The hand reaches the button at roughly
-         * 42% of the 380ms animation.
+         * Hand reaches the button at roughly
+         * 42% of the animation.
          */
         await sleep(160);
 
         playDeadbuttonSound();
 
-
-        /*
-         * Finish the remaining click animation.
-         */
         await sleep(220);
 
         loader.classList.remove('db-click');
@@ -105,18 +132,13 @@ if (loader && button && hand && headerLogo) {
     */
 
     const moveButtonToHeader = async () => {
-
-        /*
-         * Hand disappears first.
-         */
         hand.classList.add('db-hand-exit');
 
         await sleep(220);
 
 
         /*
-         * Measure the loader button and its
-         * final position in the header.
+         * Measure start and target.
          */
         const buttonRect =
             button.getBoundingClientRect();
@@ -150,17 +172,12 @@ if (loader && button && hand && headerLogo) {
         const translateY =
             targetCenterY - buttonCenterY;
 
-
-        /*
-         * Scale the loader button to exactly
-         * match the header button width.
-         */
         const scale =
             targetRect.width / buttonRect.width;
 
 
         /*
-         * Prepare the flying button.
+         * Prepare flight.
          */
         button.style.transformOrigin =
             'center center';
@@ -172,7 +189,7 @@ if (loader && button && hand && headerLogo) {
 
 
         /*
-         * Reveal the page behind the loader.
+         * Reveal page.
          */
         loader.classList.add(
             'db-loader-reveal'
@@ -180,7 +197,7 @@ if (loader && button && hand && headerLogo) {
 
 
         /*
-         * Start the hero typewriter.
+         * Start hero typewriter.
          */
         window.dispatchEvent(
             new CustomEvent(
@@ -190,7 +207,7 @@ if (loader && button && hand && headerLogo) {
 
 
         /*
-         * Start the flight on the next rendered frame.
+         * Start flight.
          */
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
@@ -206,30 +223,34 @@ if (loader && button && hand && headerLogo) {
 
 
         /*
-         * Wait until the flying button reaches
-         * the header.
+         * Wait for flight.
          */
         await sleep(2200);
 
 
         /*
-         * Reveal the identical real header button.
+         * Reveal real header logo.
          */
         headerLogo.classList.add(
             'db-header-logo-visible'
         );
 
-
-        /*
-         * Hide the travelling copy.
-         */
         button.style.opacity = '0';
 
         await sleep(120);
 
 
         /*
-         * Loader is no longer needed.
+         * Remember that the intro has played.
+         */
+        sessionStorage.setItem(
+            'deadbutton-loader-seen',
+            'true'
+        );
+
+
+        /*
+         * Remove loader.
          */
         loader.remove();
     };
@@ -265,8 +286,7 @@ if (loader && button && hand && headerLogo) {
 
 
         /*
-         * If the page is still loading,
-         * keep pressing the button.
+         * Continue while page loads.
          */
         while (!pageReady) {
             await sleep(100);
@@ -276,8 +296,7 @@ if (loader && button && hand && headerLogo) {
 
 
         /*
-         * Keep the intro visible for at least
-         * the minimum duration.
+         * Minimum intro duration.
          */
         const elapsed =
             performance.now() - startedAt;
@@ -296,8 +315,7 @@ if (loader && button && hand && headerLogo) {
 
 
         /*
-         * Hand disappears and the button
-         * travels into the header.
+         * Fly to header.
          */
         await moveButtonToHeader();
     };

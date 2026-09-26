@@ -18,16 +18,15 @@
     ];
 @endphp
 
-
 <section
     id="work"
     class="
         border-t
         border-black/20
-        pt-16
-        pb-28
+        pt-12
+        pb-20
         md:pt-20
-        md:pb-40
+        md:pb-32
     "
 >
     @foreach ($projects as $project)
@@ -36,7 +35,7 @@
             {{-- Project number --}}
             <div
                 class="
-                    mb-5
+                    mb-4
                     text-[11px]
                     uppercase
                     tracking-[0.14em]
@@ -47,21 +46,21 @@
                 {{ $project['number'] }}
             </div>
 
-
             {{-- Project heading --}}
             <div
                 class="
                     grid
-                    gap-8
-                    pb-7
+                    gap-5
+                    pb-6
                     md:grid-cols-12
                     md:items-end
+                    md:gap-8
+                    md:pb-7
                 "
             >
-                {{-- Title --}}
                 <h2
                     class="
-                        text-[3.1rem]
+                        text-[clamp(3.2rem,14vw,6.5rem)]
                         font-medium
                         uppercase
                         leading-[0.82]
@@ -73,13 +72,11 @@
                     {{ $project['title'] }}
                 </h2>
 
-
-                {{-- Services --}}
                 <div
                     class="
                         text-[11px]
                         uppercase
-                        leading-[1.7]
+                        leading-[1.6]
                         tracking-[0.12em]
                         text-black/50
                         md:col-span-2
@@ -92,8 +89,6 @@
                     @endforeach
                 </div>
 
-
-                {{-- Year --}}
                 <div
                     class="
                         text-[11px]
@@ -108,8 +103,7 @@
                 </div>
             </div>
 
-
-            {{-- Project visual --}}
+            {{-- Project image --}}
             <a
                 href="{{ $project['url'] }}"
                 target="_blank"
@@ -117,10 +111,8 @@
                 class="
                     group
                     block
-                    aspect-[1.45/1]
                     overflow-hidden
                     bg-black/5
-                    md:aspect-[2.4/1]
                 "
                 aria-label="Visit {{ $project['title'] }}"
             >
@@ -130,22 +122,20 @@
                         alt="{{ $project['title'] }} website"
                         loading="lazy"
                         class="
-                            h-full
+                            block
+                            h-auto
                             w-full
-                            object-cover
-                            object-left
                             transition-transform
                             duration-700
                             ease-out
                             group-hover:scale-[1.015]
-                            md:object-center
                         "
                     >
                 @else
                     <div
                         class="
                             flex
-                            h-full
+                            aspect-[2.4/1]
                             items-center
                             justify-center
                             text-[11px]
@@ -159,15 +149,15 @@
                 @endif
             </a>
 
-
             {{-- Project footer --}}
             <div
                 class="
-                    mt-6
+                    mt-5
                     flex
                     items-center
                     justify-between
                     gap-8
+                    md:mt-6
                 "
             >
                 <span
@@ -180,7 +170,6 @@
                 >
                     {{ $project['type'] }}
                 </span>
-
 
                 <a
                     href="{{ $project['url'] }}"
