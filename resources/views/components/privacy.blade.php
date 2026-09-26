@@ -37,7 +37,7 @@
                     text-[11px]
                     uppercase
                     tracking-[0.14em]
-                    text-black/45
+                    text-black/65
                 "
             >
                 Privacy
@@ -145,7 +145,7 @@
                                 text-[11px]
                                 uppercase
                                 tracking-[0.14em]
-                                text-black/45
+                                text-black/65
                             "
                         >
                             Cookies
@@ -180,7 +180,7 @@
                                 text-[11px]
                                 uppercase
                                 tracking-[0.14em]
-                                text-black/45
+                                text-black/65
                             "
                         >
                             Analytics
@@ -215,7 +215,7 @@
                                 text-[11px]
                                 uppercase
                                 tracking-[0.14em]
-                                text-black/45
+                                text-black/65
                             "
                         >
                             Contact
@@ -265,7 +265,7 @@
                 text-[10px]
                 uppercase
                 tracking-[0.14em]
-                text-black/45
+                text-black/65
             "
         >
             <span>

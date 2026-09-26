@@ -39,7 +39,7 @@
                     text-[11px]
                     uppercase
                     tracking-[0.14em]
-                    text-black/45
+                    text-black/65
                     md:mb-6
                 "
             >
@@ -78,7 +78,7 @@
                         uppercase
                         leading-[1.6]
                         tracking-[0.12em]
-                        text-black/50
+                        text-black/65
                         md:col-span-2
                     "
                 >
@@ -94,7 +94,7 @@
                         text-[11px]
                         uppercase
                         tracking-[0.12em]
-                        text-black/50
+                        text-black/65
                         md:col-span-2
                         md:text-right
                     "
@@ -141,7 +141,7 @@
                             text-[11px]
                             uppercase
                             tracking-[0.14em]
-                            text-black/30
+                            text-black/65
                         "
                     >
                         Project image
@@ -165,7 +165,7 @@
                         text-[11px]
                         uppercase
                         tracking-[0.14em]
-                        text-black/50
+                        text-black/65
                     "
                 >
                     {{ $project['type'] }}

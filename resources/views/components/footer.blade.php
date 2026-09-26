@@ -53,7 +53,7 @@
                 text-[10px]
                 uppercase
                 tracking-[0.14em]
-                text-black/50
+                text-black/65
             "
         >
             <span>

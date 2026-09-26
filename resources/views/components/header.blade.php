@@ -99,7 +99,7 @@
 
     <div class="flex items-center gap-8 text-[12px] uppercase tracking-[0.12em]">
 
-        <span class="hidden text-black/45 sm:inline">
+        <span class="hidden text-black/65 sm:inline">
             Independent digital workshop
         </span>
 
