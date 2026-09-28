@@ -10,7 +10,8 @@ if (heroTitle) {
     const loaderSeen =
         sessionStorage.getItem('deadbutton-loader-seen') === 'true';
 
-    const finalText = 'WE MAKE\nDIGITAL THINGS.';
+    const finalText =
+        'WE MAKE\nDIGITAL THINGS.';
 
 
     /*
@@ -19,9 +20,14 @@ if (heroTitle) {
     |--------------------------------------------------------------------------
     */
 
-    const keySound = new Audio('/audio/key.wav');
-    const spaceSound = new Audio('/audio/space.wav');
-    const backspaceSound = new Audio('/audio/backspace.wav');
+    const keySound =
+        new Audio('/audio/key.wav');
+
+    const spaceSound =
+        new Audio('/audio/space.wav');
+
+    const backspaceSound =
+        new Audio('/audio/backspace.wav');
 
     keySound.preload = 'auto';
     spaceSound.preload = 'auto';
@@ -39,14 +45,16 @@ if (heroTitle) {
     */
 
     const playSound = (audio) => {
-        const sound = audio.cloneNode();
+        const sound =
+            audio.cloneNode();
 
-        sound.volume = audio.volume;
+        sound.volume =
+            audio.volume;
 
         sound.play().catch(() => {
             /*
-             * Browser may block audio before
-             * the first user interaction.
+             * Mobile browsers may block audio
+             * before the first user interaction.
              */
         });
     };
@@ -65,7 +73,9 @@ if (heroTitle) {
     const typedText =
         document.getElementById('hero-typed-text');
 
-    let started = false;
+    let typing = false;
+
+    let sequenceId = 0;
 
 
     /*
@@ -73,15 +83,14 @@ if (heroTitle) {
     | Already seen
     |--------------------------------------------------------------------------
     |
-    | If the intro has already played during this browser session,
-    | show the finished hero immediately.
+    | Normal refresh during the same browser session should not replay
+    | the intro automatically.
     |
     */
 
     if (loaderSeen || reducedMotion) {
-        started = true;
-
-        typedText.textContent = finalText;
+        typedText.textContent =
+            finalText;
 
         heroTitle.classList.add(
             'hero-typing-complete'
@@ -95,8 +104,20 @@ if (heroTitle) {
     |--------------------------------------------------------------------------
     */
 
-    const typeCharacter = async (character) => {
-        typedText.textContent += character;
+    const typeCharacter = async (
+        character,
+        currentSequence
+    ) => {
+        /*
+         * Stop an old sequence if the hero
+         * has been reset in the meantime.
+         */
+        if (currentSequence !== sequenceId) {
+            return false;
+        }
+
+        typedText.textContent +=
+            character;
 
         if (character === ' ') {
             playSound(spaceSound);
@@ -108,6 +129,10 @@ if (heroTitle) {
             65 + Math.random() * 45;
 
         await sleep(delay);
+
+        return (
+            currentSequence === sequenceId
+        );
     };
 
 
@@ -117,14 +142,27 @@ if (heroTitle) {
     |--------------------------------------------------------------------------
     */
 
-    const typeText = async (text) => {
+    const typeText = async (
+        text,
+        currentSequence
+    ) => {
         for (const character of text) {
-            await typeCharacter(character);
+            const active =
+                await typeCharacter(
+                    character,
+                    currentSequence
+                );
+
+            if (!active) {
+                return false;
+            }
 
             if (character === ' ') {
                 await sleep(35);
             }
         }
+
+        return true;
     };
 
 
@@ -134,13 +172,51 @@ if (heroTitle) {
     |--------------------------------------------------------------------------
     */
 
-    const backspace = async () => {
-        typedText.textContent =
-            typedText.textContent.slice(0, -1);
+    const backspace = async (
+        currentSequence
+    ) => {
+        if (currentSequence !== sequenceId) {
+            return false;
+        }
 
-        playSound(backspaceSound);
+        typedText.textContent =
+            typedText.textContent.slice(
+                0,
+                -1
+            );
+
+        playSound(
+            backspaceSound
+        );
 
         await sleep(80);
+
+        return (
+            currentSequence === sequenceId
+        );
+    };
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reset hero
+    |--------------------------------------------------------------------------
+    */
+
+    const resetHero = () => {
+        /*
+         * Incrementing this immediately
+         * invalidates an old typing sequence.
+         */
+        sequenceId++;
+
+        typing = false;
+
+        typedText.textContent = '';
+
+        heroTitle.classList.remove(
+            'hero-typing-complete'
+        );
     };
 
 
@@ -151,35 +227,143 @@ if (heroTitle) {
     */
 
     const runTypewriter = async () => {
-        if (started) {
+        if (reducedMotion) {
+            typedText.textContent =
+                finalText;
+
+            heroTitle.classList.add(
+                'hero-typing-complete'
+            );
+
             return;
         }
 
-        started = true;
+        if (typing) {
+            return;
+        }
 
+        typing = true;
+
+        /*
+         * Each run receives its own ID.
+         */
+        const currentSequence =
+            ++sequenceId;
+
+        /*
+         * Always start from an empty hero.
+         */
+        typedText.textContent = '';
+
+        heroTitle.classList.remove(
+            'hero-typing-complete'
+        );
+
+
+        /*
+         * Small pause after loader starts
+         * revealing the page.
+         */
         await sleep(220);
 
-        await typeText('WE MAKE');
+        if (
+            currentSequence !== sequenceId
+        ) {
+            return;
+        }
+
+
+        /*
+         * WE MAKE
+         */
+        if (
+            !await typeText(
+                'WE MAKE',
+                currentSequence
+            )
+        ) {
+            return;
+        }
 
         await sleep(120);
 
-        await typeCharacter('\n');
 
-        await typeText('DIGIT');
+        /*
+         * Line break
+         */
+        if (
+            !await typeCharacter(
+                '\n',
+                currentSequence
+            )
+        ) {
+            return;
+        }
 
-        await typeCharacter('Q');
+
+        /*
+         * Intentional typo
+         */
+        if (
+            !await typeText(
+                'DIGIT',
+                currentSequence
+            )
+        ) {
+            return;
+        }
+
+        if (
+            !await typeCharacter(
+                'Q',
+                currentSequence
+            )
+        ) {
+            return;
+        }
 
         await sleep(300);
 
-        await backspace();
 
-        await typeText('AL THINGS.');
+        /*
+         * Correct typo
+         */
+        if (
+            !await backspace(
+                currentSequence
+            )
+        ) {
+            return;
+        }
+
+
+        /*
+         * Finish sentence
+         */
+        if (
+            !await typeText(
+                'AL THINGS.',
+                currentSequence
+            )
+        ) {
+            return;
+        }
 
         await sleep(1000);
 
-        heroTitle.classList.add(
-            'hero-typing-complete'
-        );
+
+        /*
+         * Complete.
+         */
+        if (
+            currentSequence === sequenceId
+        ) {
+            heroTitle.classList.add(
+                'hero-typing-complete'
+            );
+
+            typing = false;
+        }
     };
 
 
@@ -187,12 +371,31 @@ if (heroTitle) {
     |--------------------------------------------------------------------------
     | Loader trigger
     |--------------------------------------------------------------------------
+    |
+    | Do NOT use { once: true } here.
+    | The loader may now be replayed from the header logo.
+    |
     */
 
     window.addEventListener(
         'deadbutton:loader-exit',
-        runTypewriter,
-        { once: true }
+        runTypewriter
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hero reset trigger
+    |--------------------------------------------------------------------------
+    |
+    | Fired when the header logo is clicked,
+    | before the loader starts again.
+    |
+    */
+
+    window.addEventListener(
+        'deadbutton:hero-reset',
+        resetHero
     );
 
 
